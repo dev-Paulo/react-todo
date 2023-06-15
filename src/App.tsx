@@ -2,15 +2,13 @@ import logoTodo from "./assets/Logo.svg";
 
 import "./App.css";
 import { PlusCircle, Trash } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Task } from "./components/Task/task";
 
 function App() {
-  const [tasks, setTasks] = useState([1]);
+  const [tasks, setTasks] = useState([]);
   const [taskTitle, setTaskTitle] = useState("");
-  const [isTaskCompleted, setIsTaskCompleted] = useState(false);
-
-  console.log;
+  const [isTaskCompleted, setIsTaskCompleted] = useState(false); 
 
   return (
     <>
