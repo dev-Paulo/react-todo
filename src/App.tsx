@@ -1,8 +1,17 @@
-import logoTodo from './assets/Logo.svg'
+import logoTodo from "./assets/Logo.svg";
 
-import './App.css'
+import "./App.css";
+import { PlusCircle, Trash } from "@phosphor-icons/react";
+import { useState } from "react";
+import { Task } from "./components/Task/task";
 
 function App() {
+  const [tasks, setTasks] = useState([1]);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [isTaskCompleted, setIsTaskCompleted] = useState(false);
+
+  console.log;
+
   return (
     <>
       <div className=" h-screen flex flex-col">
@@ -11,55 +20,87 @@ function App() {
             <img src={logoTodo} alt="Logo" />
           </div>
         </header>
-        <section className="bg-gray-500 flex-grow justify-center items-center ">
-          <div className=" flex-row justify-center items-center flex mt-[-20px] ">
-            <input
-              type="text"
-              placeholder="Adicione uma nova tarefa"
-              className=" w-96 h-10 rounded-lg bg-gray-500 text-purple-600 border-gray-200 shadow-sm sm:text-sm p-2"
-            />
-            <a
-              className="
-              inline-flex 
-              items-center 
-              gap-2 
-              rounded-lg border 
-             bg-blue-600
-              px-8 py-3 
-              text-white hover:bg-blue-600 hover:text-white focus:outline-none focus:ring active:bg-blue-600"
-              href="/download"
-            >
-              <span className="text-sm font-medium"> Criar </span>
+        <section className="bg-gray-600 flex-grow flex-col flex ">
+          <div className="flex-col mt-[-20px] items-center flex ">
+            <div className="flex-row justify-center items-center flex  w-2/4">
+              <input
+                type="text"
+                className="bg-gray-500 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 placeholder:text-gray-300"
+                placeholder="Adicione uma nova tarefa"
+                onChange={(event: any) => {
+                  setTaskTitle(event.target.value);
+                }}
+              ></input>
 
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+              <button
+                type="button"
+                className="text-center inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 ml-2 focus:outline-none dark:focus:ring-blue-800"
+                onClick={() => {
+                  alert("hello");
+                }}
               >
-                <g clipPath="url(#clip0_2306_46)">
-                  <path
-                    d="M7.98373 1.45158C9.27565 1.45158 10.5386 1.83468 11.6128 2.55244C12.687 3.27019 13.5242 4.29037 14.0186 5.48395C14.513 6.67754 14.6424 7.99092 14.3903 9.25802C14.1383 10.5251 13.5161 11.689 12.6026 12.6026C11.6891 13.5161 10.5252 14.1382 9.25807 14.3903C7.99097 14.6423 6.67759 14.5129 5.484 14.0185C4.29042 13.5241 3.27025 12.6869 2.55249 11.6127C1.83473 10.5385 1.45163 9.2756 1.45163 7.98368C1.45832 6.25332 2.14867 4.59574 3.37223 3.37218C4.59579 2.14862 6.25337 1.45827 7.98373 1.45158ZM7.98373 5.77648e-06C6.40611 0.00645971 4.86578 0.480174 3.55717 1.36134C2.24857 2.24252 1.23037 3.49164 0.631106 4.95102C0.031846 6.4104 -0.121605 8.01461 0.190125 9.56114C0.501855 11.1077 1.26479 12.5272 2.38262 13.6404C3.50044 14.7537 4.92304 15.5108 6.47082 15.8162C8.01861 16.1217 9.62218 15.9617 11.0791 15.3564C12.536 14.7512 13.781 13.7279 14.6568 12.4158C15.5326 11.1036 16 9.5613 16.0001 7.98368C16.0001 6.93249 15.7925 5.89165 15.3892 4.92089C14.986 3.95014 14.395 3.06857 13.6502 2.32679C12.9053 1.58501 12.0214 0.997618 11.049 0.598327C10.0766 0.199035 9.0349 -0.00429452 7.98373 5.77648e-06Z"
-                    fill="#F2F2F2"
-                  />
-                  <path
-                    d="M11.707 7.38127H8.4954V4.16966H7.41397V7.38127H4.19873V8.4627H7.41397V11.6743H8.4954V8.4627H11.707V7.38127Z"
-                    fill="#F2F2F2"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_2306_46">
-                    <rect width="16" height="16" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </a>
+                Criar
+                <PlusCircle size={20} className="ml-2" />
+              </button>
+            </div>
+
+            <div className="flex-row inline-flex justify-between mt-10 w-2/4 mb-4">
+              <div className="flex-row inline-flex items-center w-2/4">
+                <p className="text-blue-500 font-bold mr-2">Tarefas criadas</p>
+                <span className="bg-gray-300 text-white text-xs font-medium  px-2.5 py-0.5 rounded-full ">
+                  5
+                </span>
+              </div>
+              <div className="flex-row inline-flex items-center justify-end w-2/4">
+                <p className="text-purple-purple font-bold mr-2">Concluídas</p>
+                <span className="bg-gray-300 text-white text-xs font-medium  px-2.5 py-0.5 rounded-full ">
+                  2 de 5
+                </span>
+              </div>
+            </div>
+
+            <div className="flex-col items-center flex  w-2/4">
+              {tasks.map((task: any, index: number) => {
+                return (
+                  <>
+                    <div key={index} className="h-[72px] p-4 rounded-lg bg-gray-500 flex-row inline-flex items-center w-full justify-between">
+                      <div className="flex-row inline-flex items-center">
+                        <input
+                          id="default-checkbox"
+                          type="checkbox"
+                          value=""
+                          className="w-5 h-5 mr-2 text-purple-dark bg-gray-500 border-blue-500 rounded-xl focus:ring-purple-purple focus:ring-3 ring-blue-500"
+                          onChange={() => {
+                            setIsTaskCompleted(!isTaskCompleted);
+                          }}
+                        />
+
+                        <p
+                          className="text-gray-100"
+                          style={{
+                            textDecoration: `${
+                              isTaskCompleted ? "line-through" : ""
+                            }`,
+                            color: `${isTaskCompleted ? "#808080" : "#F2F2F2"}`,
+                          }}
+                        >
+                          Integer urna interdum massa libero auctor neque turpis
+                          turpis semper. Duis vel sed fames integer.{" "}
+                        </p>
+                      </div>
+                      <div className="">
+                        <Trash size={24} className="text-gray-300" />
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
+            </div>
           </div>
         </section>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
