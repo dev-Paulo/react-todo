@@ -1,7 +1,7 @@
 import logoTodo from "./assets/Logo.svg";
 import "./App.css";
 import { ClipboardText, PlusCircle, Trash } from "@phosphor-icons/react";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
