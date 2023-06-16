@@ -2,68 +2,60 @@ import logoTodo from "./assets/Logo.svg";
 import "./App.css";
 import { ClipboardText, PlusCircle, Trash } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default function App() {
   interface Task {
-    id: number;
+    id: string;
     name: string;
+    isComplete: boolean
   }
 
 
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [isTaskCompleted, setIsTaskCompleted] = useState<boolean[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]); 
   const [completedTasksCount, setCompletedTasksCount] = useState(0);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [error, setError] = useState(false)
 
   useEffect(() => {
     setCompletedTasksCount(
-      isTaskCompleted.filter((completed) => completed).length
+      tasks.filter((task) => task.isComplete == true).length
     );
-  }, [isTaskCompleted]);
+  }, [tasks]);
 
+  function addTask(event: any) {
+    event.preventDefault()
+    if (newTaskTitle !== "") {
+      setError(false)
+      const newTask = {
+        id: uuidv4(),
+        name: newTaskTitle,
+        isComplete: false
+      }
+      const newTaskArray = [...tasks, newTask]
+      setNewTaskTitle("")  
+      setTasks(newTaskArray)
+    } else {
+      setError(true)
+    }
   
-
-  function addTask(event: any)  {
-  event.preventDefault()
-
-  if(newTaskTitle != "") {
-      setTasks([{ id: tasks.length + 1, name: newTaskTitle }, ...tasks]);
-     setError(false)
-  } else {
-    setError(true)
   }
-    
-    console.log(error, newTaskTitle)
-     // setTasks([{ id: tasks.length + 1, name: newTaskTitle }, ...tasks]);
-    // setNewTaskTitle("");
 
-    
-    
-  };
+console.log(tasks)
 
 
-  const handleCheckboxChange = (index: number) => {
-    setIsTaskCompleted((prevTasks) => {
-      const updatedTasks = [...prevTasks];
-      updatedTasks[index] = !updatedTasks[index];
-      return updatedTasks;
+  const handleTaskDeletion = (id: string) =>  {
+    setTasks(tasks.filter((task) => task.id !== id))
+  }
+
+  function handleCheckboxChange(id: string) {
+    const newTasksArray = tasks.map((task: Task) => {
+      if (task.id === id) task.isComplete = !task.isComplete;
+      return task;
     });
-  };
-
-  const handleTaskDeletion = (index: number) => {
-    setTasks((prevTasks) => {
-      const updatedTasks = [...prevTasks];
-      updatedTasks.splice(index, 1);
-      return updatedTasks;
-    });
-    setIsTaskCompleted((prevTasks) => {
-      const updatedTasks = [...prevTasks];
-      updatedTasks.splice(index, 1);
-      return updatedTasks;
-    });
-  };
+    setTasks(newTasksArray);
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,7 +74,7 @@ export default function App() {
               <div className="flex w-full flex-col ">
                 <input
                   type="text"
-                  // name="taskTitle"
+                  name="taskTitle"
                    value={newTaskTitle}                 
                   onChange={(event) => setNewTaskTitle(event.target.value)}
                   className={`h-14 bg-gray-500 text-white text-sm rounded-lg  block w-full p-2.5 placeholder:text-gray-300 ${
@@ -119,7 +111,7 @@ export default function App() {
           </div>
           {tasks.length > 0 ? (
             <div className="flex-col items-center flex w-full md:w-2/4">
-              {tasks.map((task: Task, index: number) => (
+              {tasks.map((task: Task) => (
                 <div
                   key={task.id}
                   className="h-[72px] mb-4 p-4 rounded-lg bg-gray-500 flex-row inline-flex items-center w-full justify-between"
@@ -130,16 +122,18 @@ export default function App() {
                       type="checkbox"
                       value=""
                       className="w-5 h-5 mr-2 text-purple-dark bg-gray-500 border-blue-500 rounded-xl focus:ring-purple-purple focus:ring-3 ring-blue-500 cursor-pointer"
-                      onChange={() => handleCheckboxChange(index)}
+                      onChange={() => 
+                        handleCheckboxChange(task.id)
+                      }
                     />
                     <p
                       className="text-gray-100"
                       style={{
                         textDecoration: `${
-                          isTaskCompleted[index] ? "line-through" : ""
+                         task.isComplete ? "line-through" : ""
                         }`,
                         color: `${
-                          isTaskCompleted[index] ? "#808080" : "#F2F2F2"
+                          task.isComplete ? "#808080" : "#F2F2F2"
                         }`,
                       }}
                     >
@@ -150,7 +144,7 @@ export default function App() {
                     <Trash
                       size={24}
                       className="text-gray-300 cursor-pointer"
-                      onClick={() => handleTaskDeletion(index)}
+                      onClick={() => handleTaskDeletion(task.id)}
                     />
                   </div>
                 </div>
