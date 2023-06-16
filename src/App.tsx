@@ -2,9 +2,7 @@ import logoTodo from "./assets/Logo.svg";
 import "./App.css";
 import { ClipboardText, PlusCircle, Trash } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 
 export default function App() {
   interface Task {
@@ -12,22 +10,12 @@ export default function App() {
     name: string;
   }
 
-  const newTaskSchema = z.object({
-    taskTitle: z.string().nonempty("É necessário um título para uma task"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Record<string, string>>({
-    resolver: zodResolver(newTaskSchema),
-  });
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isTaskCompleted, setIsTaskCompleted] = useState<boolean[]>([]);
   const [completedTasksCount, setCompletedTasksCount] = useState(0);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     setCompletedTasksCount(
@@ -35,12 +23,26 @@ export default function App() {
     );
   }, [isTaskCompleted]);
 
-  const handleAddTask = (data: Record<string, string>) => {
-    // event.preventDefault();
-    setTasks([...tasks, { id: tasks.length + 1, name: newTaskTitle }]);
-    setNewTaskTitle("");
-    console.log(data);
+  
+
+  function addTask(event: any)  {
+  event.preventDefault()
+
+  if(newTaskTitle != "") {
+      setTasks([{ id: tasks.length + 1, name: newTaskTitle }, ...tasks]);
+     setError(false)
+  } else {
+    setError(true)
+  }
+    
+    console.log(error, newTaskTitle)
+     // setTasks([{ id: tasks.length + 1, name: newTaskTitle }, ...tasks]);
+    // setNewTaskTitle("");
+
+    
+    
   };
+
 
   const handleCheckboxChange = (index: number) => {
     setIsTaskCompleted((prevTasks) => {
@@ -73,7 +75,7 @@ export default function App() {
       <section className="bg-gray-600 flex-grow flex-col flex px-4">
         <div className="flex-col mt-[-20px] items-center flex ">
           <form
-            onSubmit={handleSubmit(handleAddTask)}
+            onSubmit={addTask}
             className=" flex w-full md:w-2/4"
           >
            
@@ -81,19 +83,14 @@ export default function App() {
                 <input
                   type="text"
                   // name="taskTitle"
-                  // value={newTaskTitle}
-                  {...register("taskTitle")}
+                   value={newTaskTitle}                 
                   onChange={(event) => setNewTaskTitle(event.target.value)}
                   className={`h-14 bg-gray-500 text-white text-sm rounded-lg  block w-full p-2.5 placeholder:text-gray-300 ${
-                    errors.taskTitle ? "border-red-500" : ""
+                    error ? "border-red-500" : ""
                   }`}
                   placeholder="Adicione uma nova tarefa"
                 />
-                {errors.taskTitle && (
-                  <p className="text-red-500 text-md mt-2">
-                    {errors.taskTitle.message}
-                  </p>
-                )}
+                {error &&  <span className="text-red-500 text-md mt-2">É necessário um título para a task</span>}
               </div>
 
               <button
